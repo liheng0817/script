@@ -18,7 +18,7 @@ clear
 echo "##########################################"
 echo "#       Auto Install zabbix.            ##"
 echo "#       Press Ctrl + C to cancel        ##"
-echo "#       Any key to continue             ##"
+echo "#       Press Any key to continue       ##"
 echo "##########################################"
 echo "(1) Install zabbix3.0"
 echo "(2) Install zabbix3.2"
@@ -39,7 +39,7 @@ case $OPTION in
   VER=zbx-3.4
 ;;
 4)
-  echo -e "\033[41;37m You choice channel! \033[0m" && exit 0
+  echo -e "\033[41;37m You choice cannel! \033[0m" && exit 0
 ;;
 *)
   echo -e "\033[41;37m Input Error! Place input{1|2|3|4} \033[0m" && exit 1
@@ -53,7 +53,7 @@ rpm -ivh $URL
 yum makecache
 clear
 install_mariadb() {
-yum install mariadb mariadb-server
+yum install mariadb mariadb-server net-tools -y
 systemctl start mariadb
 mysqladmin -uroot password westos
 mysql -uroot -pwestos -e "create database zabbix default character set utf8 collate utf8_bin;"
