@@ -49,3 +49,33 @@ clear
 echo -e "\033[32m You choice install $VER.Install\033[0m"
 echo -e "\033[5m Press any key to start install $VER... \033[0m"
 read -n 1
+install_mariadb() {
+yum install mariadb mariadb-server
+systemctl start mariadb
+mysqladmin -uroot password westos
+mysql -uroot -pwestos -e "create database zabbix default character set utf8 collate utf8_bin;"
+mysql -uroot -pwestos -e "grant all on zabbix.* to 'zabbix'@'localhost' identified by 'zabbix';"
+}
+install_zabbix() {
+yum install zabbix-server-mysql zabbix-agent zabbix-web-mysql zabbix-get -y
+}
+import_data() {
+cd /usr/share/doc/zabbix-server*
+zcat create.sql.gz |mysql -uroot -pwestos zabbix
+}
+config_file() {
+sed -i "s/# DBHost=localhost/DBHost=localhost/g" /etc/zabbix/zabbix_server.conf
+sed -i "s/# DBPassword=/DBPassword=zabbix/g" /etc/zabbix/zabbix_server.conf
+sed -i "s:`grep date.timezone /etc/httpd/conf.d/zabbix.conf`:php_value date.timezone Asia\/Shanghai:g" /etc/httpd/conf.d/zabbix.conf
+}
+start() {
+systemctl start mariadb httpd zabbix-server zabbix-agent
+}
+main() {
+install_mariadb
+install_zabbix
+import_data
+config_file
+start
+}
+main
