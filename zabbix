@@ -1,6 +1,7 @@
 #!/bin/bash
 #Date 2018/6/23
 mail liheng@anchnet.com
+IP=``ifconfig |awk -F '[ ]+' 'NR==2 {print $3}'
 [ $(id -u) != "0" ] && echo "Error: You must be root to run this script" && exit 1
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
@@ -54,6 +55,18 @@ read -n 1
 rpm -ivh $URL
 yum makecache
 clear
+config_iptables() {
+systemctl status firewalld
+if [ $? -eq "0" ];
+   then
+   firewall-cmd --zone=public --add-port=80/tcp --permanent
+   firewall-cmd --zone=public --add-port=10051/tcp --permanent
+   firewall-cmd --zone=public --add-port=10050/tcp --permanent
+   firewall-cmd --reload
+   else
+   echo -e "\033[32m firewalld is stopd\033[0m"
+fi
+}
 install_mariadb() {
 yum install mariadb mariadb-server net-tools -y
 systemctl start mariadb
@@ -82,6 +95,10 @@ install_mariadb
 install_zabbix
 import_data
 config_file
+config_iptables
 start
 }
 main
+echo -e "\033[42;37m $VER is Install Successed,Username:Admin Password:zabbix \033[0m"
+echo -e "\033[42;37m rul:http://$IP/zabbix \033[0m"
+echo -e "\033[42;37m MySql:Username:root Password:westos Username:zabbix Password:zabbix \033[0m"
