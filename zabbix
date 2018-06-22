@@ -49,6 +49,9 @@ clear
 echo -e "\033[32m You choice install $VER.Install\033[0m"
 echo -e "\033[5m Press any key to start install $VER... \033[0m"
 read -n 1
+rpm -ivh $URL
+yum makecache
+clear
 install_mariadb() {
 yum install mariadb mariadb-server
 systemctl start mariadb
@@ -57,7 +60,7 @@ mysql -uroot -pwestos -e "create database zabbix default character set utf8 coll
 mysql -uroot -pwestos -e "grant all on zabbix.* to 'zabbix'@'localhost' identified by 'zabbix';"
 }
 install_zabbix() {
-yum install zabbix-server-mysql zabbix-agent zabbix-web-mysql zabbix-get -y
+yum install zabbix-server-mysql zabbix-agent zabbix-web-mysql zabbix-get mailx autoconf dos2unix vim zcat libxml* net-snmp-devel curl-devel unixODBC-devel OpenIPMI-devel java-devel -y
 }
 import_data() {
 cd /usr/share/doc/zabbix-server*
