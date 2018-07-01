@@ -1,7 +1,7 @@
 #!/bin/bash
 #Date 2018/6/23
-mail liheng@anchnet.com
-IP=``ifconfig |awk -F '[ ]+' 'NR==2 {print $3}'
+#mail liheng@anchnet.com
+IP=`ifconfig |awk -F '[ ]+' 'NR==2 {print $3}'`
 [ $(id -u) != "0" ] && echo "Error: You must be root to run this script" && exit 1
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 sed -i "s/SELINUX=enforcing/SELINUX=disabled/" /etc/selinux/config
