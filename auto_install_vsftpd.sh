@@ -55,7 +55,7 @@ pasv_min_port=2000
 pasv_max_port=2050
 EOF
 }
-"\033[5;32;49;1m Hello World! \033[25;39;49;0m"
+
 test () {
 echo -e "\033[5;32;49;1m ########################################## \033[25;39;49;0m"
 echo -e "\033[5;32;49;1m #       Auto Install Vsftpd.service     ## \033[25;39;49;0m"
