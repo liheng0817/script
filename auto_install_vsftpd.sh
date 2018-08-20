@@ -1,6 +1,8 @@
 #!/bin/bash
-# auth:fengdeyingzi
-# func:vsftpd安装
+#Description:Auto install Vsftpd for Centos7/6.
+#auth:H.LI
+#Version:1.0
+#CreateTime:2018-08-20 18:12:08
 
 . /etc/init.d/functions
 export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
