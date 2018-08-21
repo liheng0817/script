@@ -5,70 +5,52 @@ service iptables status
 二、快速安装iptables 
 apt-get install iptables  //Debian,Ubuntu使用此命令
 yum install iptables   //Linux,CentOS使用此命令
+
 二、配置iptables规则
 本身的规则会对我们的配置造成干扰，我们先清除默认规则。
-iptables –F
-（iptables配置文件在/etc/sysconfig/iptables）
-iptables -A INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
-#允许本地回环接口
-iptables -A INPUT -m state –state ESTABLISHED,RELATED -j ACCEPT
-# 允许已建立的或相关连的通行
-iptables -A OUTPUT -j ACCEPT
-#允许所有本机向外的访问
-iptables -A INPUT -p tcp –dport 22 -j ACCEPT
-# 允许访问22端口（这是ssh端口，建议开启）
-iptables -A INPUT -p tcp –dport 80 -j ACCEPT
-#允许访问80端口（架设WEB必须开启）
-iptables -A INPUT -p tcp –dport 1723 -j ACCEPT
-#允许访问1723端口（架设VPN必须开启）
+iptables –F    （iptables配置文件在/etc/sysconfig/iptables）
+
+iptables -A INPUT -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT      #允许本地回环接口
+
+iptables -A INPUT -m state –state ESTABLISHED,RELATED -j ACCEPT   # 允许已建立的或相关连的通行
+
+iptables -A OUTPUT -j ACCEPT   #允许所有本机向外的访问
+
+iptables -A INPUT -p tcp –dport 22 -j ACCEPT   # 允许访问22端口（这是ssh端口，建议开启）
+
+iptables -A INPUT -p tcp –dport 80 -j ACCEPT  #允许访问80端口（架设WEB必须开启）
+
+iptables -A INPUT -p tcp –dport 1723 -j ACCEPT   #允许访问1723端口（架设VPN必须开启）
+
 iptables -A INPUT -p tcp –dport 21 -j ACCEPT
 iptables -A INPUT -p tcp –dport 20 -j ACCEPT
 #允许FTP服务的21和20端口
+
 注：因为根据防火墙的安全规则，禁用所有没有定义的端口。所以，如果大家还需要开启更多的端口，请按照上面的配置开启。
+
 iptables -A INPUT -j REJECT
 iptables -A FORWARD -j REJECT
 #禁止其他未允许的规则访问
-#拒绝某个ip访问：
--A INPUT -s ip -j DROP
-service iptables save
-或者/etc/rc.d/init.d/iptables save
-#保存防火墙规则
-service iptables restart
-#重启防火墙才能使规则生效
+
+iptables -A INPUT -s ip -j DROP   #拒绝某个ip访问
+
+service iptables save或者/etc/rc.d/init.d/iptables save  #保存防火墙规则
+
+service iptables restart   #重启防火墙才能使规则生效
+
 三、查询修改及删除
-iptables -L –n
-#查询正在使用的规则
-iptables -L -n –line-numbers
-#将规则按数字序号显示方便删除
-iptables -D INPUT 4
-#删除第四条规则
- 四、设定开机启动，这一步很重要推荐设置。
+iptables -L –n    #查询正在使用的规则
+
+iptables -L -n –line-numbers    #将规则按数字序号显示方便删除
+
+iptables -D INPUT 4    #删除第四条规则
+
+四、设定开机启动，这一步很重要推荐设置。
 chkconfig iptables on
  
-如果你的IPTABLES基础知识还不了解,建议先去看看.
+
 开始配置
-我们来配置一个filter表的防火墙.
-(1)查看本机关于IPTABLES的设置情况
-[root@tp ~]# iptables -L -n
-Chain INPUT (policy ACCEPT)
-target       prot opt source                 destination
-Chain FORWARD (policy ACCEPT)
-target       prot opt source                 destination
-Chain OUTPUT (policy ACCEPT)
-target       prot opt source                 destination
-Chain RH-Firewall-1-INPUT (0 references)
-target       prot opt source                 destination
-ACCEPT       all    —    0.0.0.0/0              0.0.0.0/0
-ACCEPT       icmp —    0.0.0.0/0              0.0.0.0/0             icmp type 255
-ACCEPT       esp    —    0.0.0.0/0              0.0.0.0/0
-ACCEPT       ah     —    0.0.0.0/0              0.0.0.0/0            ACCEPT       udp    —    0.0.0.0/0              224.0.0.251           udp dpt:5353
-ACCEPT       udp    —    0.0.0.0/0              0.0.0.0/0             udp dpt:631
-ACCEPT       all    —    0.0.0.0/0              0.0.0.0/0             state RELATED,ESTABLISHED
-ACCEPT       tcp    —    0.0.0.0/0              0.0.0.0/0             state NEW tcp dpt:22
-ACCEPT       tcp    —    0.0.0.0/0              0.0.0.0/0             state NEW tcp dpt:80
-ACCEPT       tcp    —    0.0.0.0/0              0.0.0.0/0             state NEW tcp dpt:25
-REJECT       all    —    0.0.0.0/0              0.0.0.0/0             reject-with icmp-host-prohibited
-可以看出我在安装linux时,选择了有防火墙,并且开放了22,80,25端口.
+
 如果你在安装linux时没有选择启动防火墙,是这样的
 [root@tp ~]# iptables -L -n
 Chain INPUT (policy ACCEPT)
@@ -77,11 +59,15 @@ Chain FORWARD (policy ACCEPT)
 target       prot opt source                 destination
 Chain OUTPUT (policy ACCEPT)
 target       prot opt source                 destination
-什么规则都没有.
-(2)清除原有规则.
-不管你在安装linux时是否启动了防火墙,如果你想配置属于自己的防火墙,那就清除现在filter的所有规则.
-[root@tp ~]# iptables -F        清除预设表filter中的所有规则链的规则
-[root@tp ~]# iptables -X        清除预设表filter中使用者自定链中的规则
+什么规则都没有
+
+清除原有规则
+
+不管你在安装linux时是否启动了防火墙,如果你想配置属于自己的防火墙,那就清除现在filter的所有规则
+
+[root@tp ~]# iptables -F        #清除预设表filter中的所有规则链的规则
+[root@tp ~]# iptables -X        #清除预设表filter中使用者自定链中的规则
+
 我们在来看一下
 [root@tp ~]# iptables -L -n
 Chain INPUT (policy ACCEPT)
@@ -90,13 +76,14 @@ Chain FORWARD (policy ACCEPT)
 target       prot opt source                 destination
 Chain OUTPUT (policy ACCEPT)
 target       prot opt source                 destination
-什么都没有了吧,和我们在安装linux时没有启动防火墙是一样的.(提前说一句,这些配置就像用命令配置IP一样,重起就会失去作用),怎么保存.
-[root@tp ~]# /etc/rc.d/init.d/iptables save
-这样就可以写到/etc/sysconfig/iptables文件里了.写入后记得把防火墙重起一下,才能起作用.
-[root@tp ~]# service iptables restart
-现在IPTABLES配置表里什么配置都没有了,那我们开始我们的配置吧
+现在和我们在安装linux时没有启动防火墙是一样的.(提前说一句,这些配置就像用命令配置IP一样,重起就会失去作用),怎么保存.
+[root@tp ~]# /etc/rc.d/init.d/iptables save   #这样就可以写到/etc/sysconfig/iptables文件里了，写入后记得把防火墙重起一下,才能起作用.
+
+[root@tp ~]# service iptables restart    #重启
+
+现在IPTABLES配置表里什么配置都没有了,我们开始我们的配置
 (3)设定预设规则
-[root@tp ~]# iptables -p INPUT DROP
+[root@tp ~]# iptables -A INPUT DROP
 [root@tp ~]# iptables -p OUTPUT ACCEPT
 [root@tp ~]# iptables -p FORWARD DROP
 上面的意思是,当超出了IPTABLES里filter表里的两个链规则(INPUT,FORWARD)时,不在这两个规则里的数据包怎么处理呢,那就是DROP(放弃).应该说这样配置是很安全的.我们要控制流入数据包
