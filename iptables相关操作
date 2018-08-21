@@ -84,14 +84,10 @@ target       prot opt source                 destination
 现在IPTABLES配置表里什么配置都没有了,我们开始我们的配置
 (3)设定预设规则
 [root@tp ~]# iptables -A INPUT DROP
-[root@tp ~]# iptables -p OUTPUT ACCEPT
-[root@tp ~]# iptables -p FORWARD DROP
-上面的意思是,当超出了IPTABLES里filter表里的两个链规则(INPUT,FORWARD)时,不在这两个规则里的数据包怎么处理呢,那就是DROP(放弃).应该说这样配置是很安全的.我们要控制流入数据包
-而对于OUTPUT链,也就是流出的包我们不用做太多限制,而是采取ACCEPT,也就是说,不在着个规则里的包怎么办呢,那就是通过.
-可以看出INPUT,FORWARD两个链采用的是允许什么包通过,而OUTPUT链采用的是不允许什么包通过.
-这样设置还是挺合理的,当然你也可以三个链都DROP,但这样做我认为是没有必要的,而且要写的规则就会增加.但如果你只想要有限的几个规则是,如只做WEB服务器.还是推荐三个链都是DROP.
+[root@tp ~]# iptables -A OUTPUT ACCEPT
+[root@tp ~]# iptables -A FORWARD DROP
 注:如果你是远程SSH登陆的话,当你输入第一个命令回车的时候就应该掉了.因为你没有设置任何规则.
-怎么办,去本机操作呗!
+
 (4)添加规则.
 首先添加INPUT链,INPUT链的默认规则是DROP,所以我们就写需要ACCETP(通过)的链
 为了能采用远程SSH登陆,我们要开启22端口.
