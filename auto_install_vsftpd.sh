@@ -18,7 +18,7 @@ echo -e "\033[32m 创建FTP系统用户 \033[0m"
 read -p "Please input FTP user:" FTPUSER
 read -p "Please input FTP user password:" PASS
 #B=`cat /etc/passwd|grep $FTPUSER |awk  -F: '{print $1 't' $7}'|awk -F / '{print $1":"$2$3}'`
-id $FTPUSER
+id $FTPUSER >/dev/null
 if [ $? -eq 0 ];then
        echo -e "\033[32m $FTPUSER User already exists \033[0m"
    else
