@@ -3,8 +3,16 @@ service iptables status
 若提示为iptables：unrecognized service，则需要安装。
 一般Linux系统都已经安装了iptables防火墙
 二、快速安装iptables 
-apt-get install iptables  //Debian,Ubuntu使用此命令
-yum install iptables   //Linux,CentOS使用此命令
+apt-get install iptables iptables-services  //Debian,Ubuntu使用此命令
+yum install iptables iptables-services  //Linux,CentOS使用此命令
+Centos7以上版本默认使用的是firewalld，如果使用iptables，需要关闭firewalld，设置开机不自启动
+查看状态
+service firewalld status
+firewall-cmd --state
+屏蔽服务
+systemctl mask firewalld
+反屏蔽服务
+systemctl mask firewalld
 
 二、配置iptables规则
 本身的规则会对我们的配置造成干扰，我们先清除默认规则。
@@ -67,6 +75,8 @@ target       prot opt source                 destination
 
 [root@tp ~]# iptables -F        #清除预设表filter中的所有规则链的规则
 [root@tp ~]# iptables -X        #清除预设表filter中使用者自定链中的规则
+
+
 
 我们在来看一下
 [root@tp ~]# iptables -L -n
