@@ -8,7 +8,7 @@ sys=`rpm -q centos-release|cut -d- -f3`
 #echo -e "\033[32m Your system version is ${sys}.x\033[0m"
 ##############################################
 centos_6 () {
-rpm -q iptables-services >/dev/null
+rpm -q iptables >/dev/null
 if [ $? -eq 0 ];
     then
         /etc/init.d/iptables status >/dev/null
@@ -20,7 +20,7 @@ if [ $? -eq 0 ];
         fi
 elif [ $? -ne 0 ];
     then
-        yum install -y iptables-services >/dev/null &&
+        yum install -y iptables >/dev/null &&
         /etc/init.d/iptables start >/dev/null
 fi
 }
@@ -50,8 +50,8 @@ if [ $sys -eq 6 ];
    then
         centos_6
         iptables -A INPUT -p tcp -s $IP -j DROP
-        /etc/init.d/iptables save
-        /etc/init.d/iptables restart
+#        /etc/init.d/iptables save
+#       /etc/init.d/iptables restart
 
 elif [ $sys -eq 7 ];
    then
@@ -66,7 +66,7 @@ else
 #########################
 
 main () {
-A=2
+A=5
 cat /var/log/secure|awk '/Failed password/ {print $(NF-3)}'|sort|uniq -c|awk '{print $2"="$1}'> /etc/ssh/block-ip
 for i in `cat /etc/ssh/block-ip`
 do
@@ -87,4 +87,9 @@ done
 
 main
 service iptables save >/dev/null
-systemctl restart iptables >/dev/null
+if [ $sys -eq 6 ];
+   then
+      /etc/init.d/iptables restart
+else
+   systemctl restart iptables >/dev/null
+fi
