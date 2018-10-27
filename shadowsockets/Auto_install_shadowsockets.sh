@@ -10,7 +10,7 @@ systemctl disable firewalld.service
 setenforce 0
 
 #####添加epel源
-rpm -Uvh http://mirrors.yun-idc.com/epel/7/x86_64/e/epel-release-7-9.noarch.rpm
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 yum makecache
 
 ####服务搭建####
