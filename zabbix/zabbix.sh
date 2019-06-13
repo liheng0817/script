@@ -26,7 +26,8 @@ echo "##########################################"
 echo "(1) Install zabbix3.0"
 echo "(2) Install zabbix3.2"
 echo "(3) Install zabbix3.4"
-echo "(4) EXIT"
+echo "(4) Install zabbix4.0"
+echo "(5) EXIT"
 read -p "Please input your choice:" OPTION
 case $OPTION in
 1)
@@ -42,6 +43,10 @@ case $OPTION in
   VER=zbx-3.4
 ;;
 4)
+  URL=http://repo.zabbix.com/zabbix/4.0/rhel/7/x86_64/zabbix-release-4.0-1.el7.noarch.rpm
+  VER=zbx-4.0
+;;
+5)
   echo -e "\033[41;37m You choice cannel! \033[0m" && exit 0
 ;;
 *)
